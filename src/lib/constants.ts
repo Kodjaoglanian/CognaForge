@@ -13,7 +13,8 @@ import {
   GraduationCap,
   BrainCircuit,
   ClipboardCopy,
-  FileText, // Ícone para Analisador de Textos
+  FileText,
+  StickyNote, // Ícone para Caderno IA
 } from 'lucide-react';
 
 export interface NavItem {
@@ -30,6 +31,12 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/',
     icon: LayoutDashboard,
     label: 'Painel',
+  },
+  {
+    title: 'Caderno IA de Anotações',
+    href: '/ai-notes',
+    icon: StickyNote,
+    label: 'Anotações',
   },
   {
     title: 'Gerador de Flashcards IA',

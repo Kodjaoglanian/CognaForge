@@ -11,4 +11,5 @@ import '@/ai/flows/interview-simulator-flow.ts';
 import '@/ai/flows/concept-clarifier-flow.ts';
 import '@/ai/flows/cognitive-bias-navigator-flow.ts';
 import '@/ai/flows/ai-flashcard-generator-flow.ts';
-import '@/ai/flows/text-analyzer-flow.ts'; // Added new flow
+import '@/ai/flows/text-analyzer-flow.ts';
+import '@/ai/flows/summarize-note-flow.ts'; // Novo fluxo para resumir notas
