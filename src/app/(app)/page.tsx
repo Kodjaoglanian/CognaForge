@@ -148,10 +148,10 @@ export default function DashboardPage() {
           <p className="text-muted-foreground">
             O CognaForge foi projetado para transformar o aprendizado em um processo ativo, envolvente e intelectualmente estimulante.
             Em vez do consumo passivo de conteúdo, você participará de batalhas cognitivas, debaterá com a IA,
-            cocriará estruturas de conhecimento e conquistará níveis desafiadores.
+            cocriará estruturas de conhecimento, simulará entrevistas e conquistará níveis desafiadores.
           </p>
           <p className="mt-4 text-muted-foreground">
-            Nosso objetivo é ajudá-lo a alcançar novos patamares de raciocínio, compreensão e maestria em qualquer assunto que escolher.
+            Nosso objetivo é ajudá-lo a alcançar novos patamares de raciocínio, comunicação, compreensão e maestria em qualquer assunto que escolher.
             Bem-vindo ao futuro do aprendizado.
           </p>
         </CardContent>
@@ -172,6 +172,8 @@ function getFeatureDescription(href: string): string {
       return 'Teste sua maestria com desafios práticos e complexos, projetados para sintetizar seu aprendizado.';
     case '/socratic-mode':
       return 'Aprofunde sua reflexão enquanto a IA o guia com perguntas instigantes, no estilo socrático.';
+    case '/interview-simulator':
+      return 'Simule entrevistas de emprego com uma IA que assume diferentes personas de entrevistadores e fornece feedback.';
     default:
       return 'Explore esta funcionalidade para aprimorar sua jornada de aprendizado.';
   }

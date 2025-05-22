@@ -7,7 +7,8 @@ import {
   Trophy,
   MessageCircleQuestion,
   Settings,
-  Puzzle, // Ícone para o Desafio Mental
+  Puzzle,
+  Briefcase, // Novo ícone para Simulador de Entrevistas
 } from 'lucide-react';
 
 export interface NavItem {
@@ -44,7 +45,7 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Construir',
   },
   {
-    title: 'Níveis Desafiadores', // Tradução de "Boss Levels"
+    title: 'Níveis Desafiadores',
     href: '/boss-level',
     icon: Trophy,
     label: 'Desafios',
@@ -54,6 +55,12 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/socratic-mode',
     icon: MessageCircleQuestion,
     label: 'Socrático',
+  },
+  {
+    title: 'Simulador de Entrevistas', // Nova funcionalidade
+    href: '/interview-simulator',
+    icon: Briefcase,
+    label: 'Entrevistas',
   },
   {
     title: 'Configurações',
