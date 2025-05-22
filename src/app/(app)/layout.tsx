@@ -6,13 +6,10 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarInset,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { SidebarNav } from '@/components/layout/sidebar-nav';
 import { MainHeader } from '@/components/layout/main-header';
-import { APP_NAME } from '@/lib/constants';
-import { Button } from '@/components/ui/button';
-import { Settings } from 'lucide-react'; // For a potential settings button
+// Removed Settings button import as it's now in Nav
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
@@ -28,11 +25,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <SidebarNav />
             </SidebarContent>
             <SidebarFooter className="p-2 hidden md:flex">
-               {/* Example settings button, can be adapted */}
-               <Button variant="ghost" className="w-full justify-start gap-2">
-                <Settings className="h-4 w-4" />
-                <span className="group-data-[collapsible=icon]:hidden">Settings</span>
-               </Button>
+               {/* Footer can be used for other things, or removed if not needed */}
             </SidebarFooter>
           </Sidebar>
           <SidebarInset className="flex-1 overflow-y-auto">

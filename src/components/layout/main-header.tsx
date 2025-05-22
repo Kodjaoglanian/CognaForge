@@ -1,7 +1,7 @@
 import { APP_NAME } from '@/lib/constants';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { LogIn } from 'lucide-react'; // Placeholder for UserNav or Login
+import { LogIn } from 'lucide-react'; 
 
 export function MainHeader() {
   return (
@@ -27,7 +27,7 @@ export function MainHeader() {
           {/* <UserNav /> */}
           <Button variant="ghost" size="sm">
             <LogIn className="mr-2 h-4 w-4" />
-            Login
+            Entrar
           </Button>
         </div>
       </div>

@@ -1,27 +1,25 @@
-// 'use server';
-/**
- * @fileOverview Implements the boss level challenge generation flow.
- *
- * - generateBossLevelChallenge - A function that generates a boss level challenge based on the user's topic.
- * - BossLevelInput - The input type for the generateBossLevelChallenge function.
- * - BossLevelOutput - The return type for the generateBossLevelChallenge function.
- */
-
 'use server';
+/**
+ * @fileOverview Implementa o fluxo de geração de desafios de nível "chefão" (Boss Level).
+ *
+ * - generateBossLevelChallenge - Uma função que gera um desafio de nível chefão baseado no tópico do usuário.
+ * - BossLevelInput - O tipo de entrada para a função generateBossLevelChallenge.
+ * - BossLevelOutput - O tipo de retorno para a função generateBossLevelChallenge.
+ */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const BossLevelInputSchema = z.object({
-  topic: z.string().describe('The topic for which to generate a boss level challenge.'),
+  topic: z.string().describe('O tópico para o qual gerar um desafio de Nível Desafiador.'),
   userContext: z
-    .string() // Changed from data URI to string
-    .describe('Relevant user context for boss level generation.'),
+    .string()
+    .describe('Contexto relevante do usuário para a geração do Nível Desafiador.'),
 });
 export type BossLevelInput = z.infer<typeof BossLevelInputSchema>;
 
 const BossLevelOutputSchema = z.object({
-  challenge: z.string().describe('The generated boss level challenge.'),
+  challenge: z.string().describe('O desafio de Nível Desafiador gerado.'),
 });
 export type BossLevelOutput = z.infer<typeof BossLevelOutputSchema>;
 
@@ -35,15 +33,15 @@ const prompt = ai.definePrompt({
   name: 'bossLevelPrompt',
   input: {schema: BossLevelInputSchema},
   output: {schema: BossLevelOutputSchema},
-  prompt: `You are an AI that generates challenging "boss level" questions for students to test their knowledge of a given topic.
+  prompt: `Você é uma IA que gera questões desafiadoras de "Nível Desafiador" (Boss Level) para estudantes testarem seus conhecimentos sobre um determinado tópico. Responda em português do Brasil.
 
-    Topic: {{{topic}}}
+    Tópico: {{{topic}}}
 
-    User Context: {{{userContext}}}
+    Contexto do Usuário: {{{userContext}}}
 
-    Generate a complex, practical, and open-ended boss level challenge that requires the student to apply their knowledge and critical thinking skills. The challenge should be engaging and relevant to the topic.
+    Gere um desafio complexo, prático e aberto que exija que o aluno aplique seus conhecimentos e habilidades de pensamento crítico. O desafio deve ser envolvente e relevante para o tópico.
 
-    Challenge:`,
+    Desafio:`,
 });
 
 const bossLevelFlow = ai.defineFlow(

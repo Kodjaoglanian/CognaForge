@@ -6,7 +6,8 @@ import {
   Lightbulb,
   Trophy,
   MessageCircleQuestion,
-  Settings, // Added for potential future settings page
+  Settings,
+  Puzzle, // Ícone para o Desafio Mental
 } from 'lucide-react';
 
 export interface NavItem {
@@ -19,40 +20,46 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   {
-    title: 'Dashboard',
+    title: 'Painel Principal',
     href: '/',
     icon: LayoutDashboard,
-    label: 'Dashboard',
+    label: 'Painel',
   },
   {
-    title: 'Cognitive Battles',
+    title: 'Batalhas Cognitivas',
     href: '/cognitive-battle',
     icon: Brain,
-    label: 'Battles',
+    label: 'Batalhas',
   },
   {
-    title: 'Argument Duels',
+    title: 'Duelos Argumentativos',
     href: '/argument-duel',
     icon: Swords,
-    label: 'Duels',
+    label: 'Duelos',
   },
   {
-    title: 'Knowledge Construction',
+    title: 'Construção de Conhecimento',
     href: '/knowledge-construction',
     icon: Lightbulb,
-    label: 'Construct',
+    label: 'Construir',
   },
   {
-    title: 'Boss Levels',
+    title: 'Níveis Desafiadores', // Tradução de "Boss Levels"
     href: '/boss-level',
     icon: Trophy,
-    label: 'Bosses',
+    label: 'Desafios',
   },
   {
-    title: 'Socratic Mode',
+    title: 'Modo Socrático',
     href: '/socratic-mode',
     icon: MessageCircleQuestion,
-    label: 'Socratic',
+    label: 'Socrático',
+  },
+  {
+    title: 'Configurações',
+    href: '/settings',
+    icon: Settings,
+    label: 'Ajustes',
   },
 ];
 

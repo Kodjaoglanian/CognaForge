@@ -1,26 +1,25 @@
-// Argument Duels
 'use server';
 /**
- * @fileOverview Implements argument duels where the AI takes an opposing stance to force the user to defend their position.
+ * @fileOverview Implementa duelos argumentativos onde a IA assume uma postura oposta para forçar o usuário a defender sua posição.
  *
- * - argumentDuel - A function that initiates and manages the argument duel process.
- * - ArgumentDuelInput - The input type for the argumentDuel function, including the topic and user's stance.
- * - ArgumentDuelOutput - The return type for the argumentDuel function, providing feedback and recommendations.
+ * - argumentDuel - Uma função que inicia e gerencia o processo de duelo argumentativo.
+ * - ArgumentDuelInput - O tipo de entrada para a função argumentDuel, incluindo o tópico e a posição do usuário.
+ * - ArgumentDuelOutput - O tipo de retorno para a função argumentDuel, fornecendo feedback e recomendações.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const ArgumentDuelInputSchema = z.object({
-  topic: z.string().describe('The topic of the argument duel.'),
-  userStance: z.string().describe('The user\'s stance on the topic.'),
+  topic: z.string().describe('O tópico do duelo argumentativo.'),
+  userStance: z.string().describe('A posição do usuário sobre o tópico.'),
 });
 export type ArgumentDuelInput = z.infer<typeof ArgumentDuelInputSchema>;
 
 const ArgumentDuelOutputSchema = z.object({
-  aiCritique: z.string().describe('The AI\'s critique of the user\'s arguments, identifying flaws and weaknesses.'),
-  reasoningFlaws: z.string().describe('A detailed analysis of the user\'s reasoning flaws during the duel.'),
-  improvementRecommendations: z.string().describe('Specific recommendations for improving the user\'s argumentation skills.'),
+  aiCritique: z.string().describe('A crítica da IA aos argumentos do usuário, identificando falhas e fraquezas.'),
+  reasoningFlaws: z.string().describe('Uma análise detalhada das falhas de raciocínio do usuário durante o duelo.'),
+  improvementRecommendations: z.string().describe('Recomendações específicas para melhorar as habilidades de argumentação do usuário.'),
 });
 export type ArgumentDuelOutput = z.infer<typeof ArgumentDuelOutputSchema>;
 
@@ -32,16 +31,15 @@ const prompt = ai.definePrompt({
   name: 'argumentDuelPrompt',
   input: {schema: ArgumentDuelInputSchema},
   output: {schema: ArgumentDuelOutputSchema},
-  prompt: `You are an expert debater. Engage the user in an argument duel on the following topic: {{topic}}.
-The user\'s stance is: {{userStance}}.
+  prompt: `Você é um debatedor especialista. Envolva o usuário em um duelo argumentativo sobre o seguinte tópico: {{topic}}.
+A posição do usuário é: {{userStance}}.
 
-Your goal is to challenge the user\'s reasoning, identify flaws in their arguments, and provide specific recommendations for improvement.
+Seu objetivo é desafiar o raciocínio do usuário, identificar falhas em seus argumentos e fornecer recomendações específicas para melhoria. Responda em português do Brasil.
 
-After the debate, provide a critique of the user\'s arguments, a detailed analysis of their reasoning flaws, and recommendations for improving their argumentation skills.
-
-Critique:
-Reasoning Flaws:
-Recommendations:`,
+Após o debate, forneça:
+Crítica: [Crítica concisa e construtiva dos argumentos do usuário]
+Falhas de Raciocínio: [Análise detalhada das falhas lógicas ou pontos fracos no raciocínio do usuário]
+Recomendações: [Sugestões claras e acionáveis para o usuário aprimorar suas habilidades de argumentação]`,
 });
 
 const argumentDuelFlow = ai.defineFlow(

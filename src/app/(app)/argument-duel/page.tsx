@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { argumentDuel, type ArgumentDuelInput, type ArgumentDuelOutput } from '@/ai/flows/argument-duel';
-import { Loader2, AlertCircle, CheckCircle, Sparkles } from 'lucide-react';
+import { Loader2, AlertCircle, Sparkles } from 'lucide-react'; // CheckCircle removed as it wasn't used
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownRenderer } from '@/components/shared/markdown-renderer';
 
@@ -25,7 +25,7 @@ export default function ArgumentDuelPage() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!topic.trim() || !userStance.trim()) {
-      toast({ title: 'Missing Information', description: 'Please provide both a topic and your stance.', variant: 'destructive'});
+      toast({ title: 'Informações Faltando', description: 'Por favor, forneça um tópico e sua posição.', variant: 'destructive'});
       return;
     }
 
@@ -37,11 +37,11 @@ export default function ArgumentDuelPage() {
       const input: ArgumentDuelInput = { topic, userStance };
       const result = await argumentDuel(input);
       setDuelResult(result);
-      toast({ title: 'Duel Complete!', description: 'The AI has analyzed your arguments.', variant: 'default' });
+      toast({ title: 'Duelo Concluído!', description: 'A IA analisou seus argumentos.', variant: 'default' });
     } catch (err) {
       console.error(err);
-      setError('Failed to conduct argument duel. Please try again.');
-      toast({ title: 'Error', description: 'Failed to conduct argument duel.', variant: 'destructive' });
+      setError('Falha ao conduzir o duelo argumentativo. Por favor, tente novamente.');
+      toast({ title: 'Erro', description: 'Falha ao conduzir o duelo argumentativo.', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
@@ -50,34 +50,34 @@ export default function ArgumentDuelPage() {
   return (
     <div>
       <PageTitle
-        title="Argument Duel"
-        description="Defend your position! The AI will challenge your stance and provide a detailed analysis of your argumentation."
+        title="Duelo Argumentativo"
+        description="Defenda sua posição! A IA desafiará seu ponto de vista e fornecerá uma análise detalhada da sua argumentação."
       />
 
       <Card className="mb-6">
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Set Up Your Duel</CardTitle>
-            <CardDescription>Define the topic and your initial stance to begin the duel.</CardDescription>
+            <CardTitle>Prepare Seu Duelo</CardTitle>
+            <CardDescription>Defina o tópico e sua posição inicial para começar o duelo.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="topic">Topic of Debate</Label>
+              <Label htmlFor="topic">Tópico do Debate</Label>
               <Input
                 id="topic"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                placeholder="e.g., Is technology making us less social?"
+                placeholder="Ex: A tecnologia está nos tornando menos sociais?"
                 disabled={isLoading}
               />
             </div>
             <div>
-              <Label htmlFor="userStance">Your Stance / Argument</Label>
+              <Label htmlFor="userStance">Sua Posição / Argumento</Label>
               <Textarea
                 id="userStance"
                 value={userStance}
                 onChange={(e) => setUserStance(e.target.value)}
-                placeholder="e.g., I believe technology enhances social connections by..."
+                placeholder="Ex: Acredito que a tecnologia melhora as conexões sociais ao..."
                 rows={4}
                 disabled={isLoading}
               />
@@ -86,7 +86,7 @@ export default function ArgumentDuelPage() {
           <CardFooter>
             <Button type="submit" disabled={isLoading || !topic.trim() || !userStance.trim()}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Start Duel & Get Analysis
+              Iniciar Duelo & Obter Análise
             </Button>
           </CardFooter>
         </form>
@@ -96,7 +96,7 @@ export default function ArgumentDuelPage() {
         <Card className="mb-6 border-destructive bg-destructive/10">
           <CardHeader className="flex-row items-center">
             <AlertCircle className="h-5 w-5 mr-2 text-destructive" /> 
-            <CardTitle className="text-destructive">Error</CardTitle>
+            <CardTitle className="text-destructive">Erro</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-destructive-foreground">{error}</p>
@@ -109,27 +109,27 @@ export default function ArgumentDuelPage() {
           <CardHeader>
             <CardTitle className="flex items-center text-2xl">
               <Sparkles className="mr-2 h-6 w-6 text-accent" />
-              Duel Analysis & Feedback
+              Análise & Feedback do Duelo
             </CardTitle>
-            <CardDescription>Here's the AI's breakdown of the argument.</CardDescription>
+            <CardDescription>Aqui está a análise da IA sobre a argumentação.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <h3 className="text-xl font-semibold mb-2 text-primary">AI's Critique</h3>
+              <h3 className="text-xl font-semibold mb-2 text-primary">Crítica da IA</h3>
               <MarkdownRenderer content={duelResult.aiCritique} />
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-2 text-primary">Reasoning Flaws Identified</h3>
+              <h3 className="text-xl font-semibold mb-2 text-primary">Falhas de Raciocínio Identificadas</h3>
               <MarkdownRenderer content={duelResult.reasoningFlaws} />
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-2 text-primary">Improvement Recommendations</h3>
+              <h3 className="text-xl font-semibold mb-2 text-primary">Recomendações de Melhoria</h3>
               <MarkdownRenderer content={duelResult.improvementRecommendations} />
             </div>
           </CardContent>
            <CardFooter>
             <Button variant="outline" onClick={() => {setDuelResult(null); setTopic(''); setUserStance('');}}>
-                Start New Duel
+                Iniciar Novo Duelo
             </Button>
           </CardFooter>
         </Card>

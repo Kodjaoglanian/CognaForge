@@ -1,29 +1,29 @@
-// use server'
+'use server'; // Corrected directive placement
 
 /**
- * @fileOverview AI flow for co-creating dynamic mind maps and smart notes.
+ * @fileOverview Fluxo de IA para cocriação de mapas mentais dinâmicos e anotações inteligentes.
  *
- * - knowledgeConstruction - A function that orchestrates the knowledge construction process.
- * - KnowledgeConstructionInput - The input type for the knowledgeConstruction function.
- * - KnowledgeConstructionOutput - The return type for the knowledgeConstruction function.
+ * - knowledgeConstruction - Uma função que orquestra o processo de construção do conhecimento.
+ * - KnowledgeConstructionInput - O tipo de entrada para a função knowledgeConstruction.
+ * - KnowledgeConstructionOutput - O tipo de retorno para a função knowledgeConstruction.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const KnowledgeConstructionInputSchema = z.object({
-  topic: z.string().describe('The topic for knowledge construction.'),
+  topic: z.string().describe('O tópico para a construção do conhecimento.'),
   learningStyle: z
     .string()
     .optional()
     .describe(
-      'The preferred learning style of the user (e.g., visual, auditory, kinesthetic).'
+      'O estilo de aprendizado preferido do usuário (ex: Visual, Auditivo, Cinestésico, Leitura/Escrita).'
     ),
-  pace: z.string().optional().describe('The desired learning pace (e.g., fast, medium, slow).'),
+  pace: z.string().optional().describe('O ritmo de aprendizado desejado (ex: Rápido, Médio, Lento).'),
   retentionCapacity: z
     .string()
     .optional()
-    .describe('The user’s retention capacity (e.g., high, medium, low).'),
+    .describe('A capacidade de retenção do usuário (ex: Alta, Média, Baixa).'),
 });
 export type KnowledgeConstructionInput = z.infer<typeof KnowledgeConstructionInputSchema>;
 
@@ -31,12 +31,12 @@ const KnowledgeConstructionOutputSchema = z.object({
   mindMap: z
     .string()
     .describe(
-      'A dynamic mind map outlining key concepts, relationships, and practical applications related to the topic.'
+      'Um mapa mental dinâmico em formato Markdown, delineando conceitos-chave, relações e aplicações práticas relacionadas ao tópico.'
     ),
   smartNotes: z
     .string()
     .describe(
-      'Smart notes with definitions, explanations, practical examples, and key questions, personalized to the user’s learning style, pace, and retention capacity.'
+      'Anotações inteligentes em formato Markdown com definições, explicações, exemplos práticos e questões-chave, personalizadas ao estilo de aprendizado, ritmo e capacidade de retenção do usuário.'
     ),
 });
 export type KnowledgeConstructionOutput = z.infer<typeof KnowledgeConstructionOutputSchema>;
@@ -51,30 +51,31 @@ const knowledgeConstructionPrompt = ai.definePrompt({
   name: 'knowledgeConstructionPrompt',
   input: {schema: KnowledgeConstructionInputSchema},
   output: {schema: KnowledgeConstructionOutputSchema},
-  prompt: `You are an AI assistant helping students construct knowledge.
+  prompt: `Você é um assistente de IA ajudando estudantes a construir conhecimento. Responda em português do Brasil.
 
-  Based on the topic, learning style, pace, and retention capacity, generate a dynamic mind map and smart notes.
+  Com base no tópico, estilo de aprendizado, ritmo e capacidade de retenção, gere um mapa mental dinâmico e anotações inteligentes.
 
-  Topic: {{{topic}}}
-  Learning Style: {{{learningStyle}}}
-  Pace: {{{pace}}}
-  Retention Capacity: {{{retentionCapacity}}}
+  Tópico: {{{topic}}}
+  Estilo de Aprendizagem: {{#if learningStyle}}{{{learningStyle}}}{{else}}Não especificado{{/if}}
+  Ritmo: {{#if pace}}{{{pace}}}{{else}}Não especificado{{/if}}
+  Capacidade de Retenção: {{#if retentionCapacity}}{{{retentionCapacity}}}{{else}}Não especificada{{/if}}
 
-  Mind Map:
-  - Outline key concepts
-  - Show relationships between concepts
-  - Include practical applications
+  Mapa Mental (Formato Markdown):
+  - Delineie conceitos-chave.
+  - Mostre relações entre conceitos.
+  - Inclua aplicações práticas.
+  - Use títulos Markdown (#, ##, ###) para estrutura e listas (- ou *) para itens.
 
-  Smart Notes:
-  - Provide definitions
-  - Give explanations
-  - Offer practical examples
-  - Pose key questions
-  - Personalize to the user’s learning style, pace, and retention capacity.
+  Anotações Inteligentes (Formato Markdown):
+  - Forneça definições claras.
+  - Dê explicações detalhadas.
+  - Ofereça exemplos práticos e relevantes.
+  - Apresente questões-chave para estimular o pensamento.
+  - Personalize para o estilo de aprendizado, ritmo e capacidade de retenção do usuário, se especificados.
+  - Use títulos Markdown, negrito (**exemplo**), itálico (*exemplo*) e listas para melhor organização.
 
-  Ensure that the mind map and smart notes are well-organized, informative, and tailored to the user’s individual needs.
-  The mindmap should be in markdown format.
-  The smart notes should be in markdown format.
+  Certifique-se de que o mapa mental e as anotações inteligentes sejam bem organizados, informativos e adaptados às necessidades individuais do usuário.
+  Ambos devem estar em formato Markdown e em português do Brasil.
   `,
 });
 
@@ -89,4 +90,3 @@ const knowledgeConstructionFlow = ai.defineFlow(
     return output!;
   }
 );
-

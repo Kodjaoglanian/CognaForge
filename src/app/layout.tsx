@@ -9,7 +9,7 @@ const geistMono = GeistMono;
 
 export const metadata: Metadata = {
   title: 'CognaForge',
-  description: 'A revolutionary AI-powered learning platform.',
+  description: 'Uma plataforma de aprendizado revolucionária impulsionada por IA.',
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="pt-BR" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
         <Toaster />

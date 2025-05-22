@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { cognitiveBattle, type CognitiveBattleInput } from '@/ai/flows/cognitive-battle'; // Reusing cognitive battle flow
+import { cognitiveBattle, type CognitiveBattleInput } from '@/ai/flows/cognitive-battle'; 
 import { Bot, User, Loader2, AlertCircle, MessageCircleQuestion } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -21,7 +21,7 @@ interface SocraticMessage {
 
 export default function SocraticModePage() {
   const [topic, setTopic] = useState('');
-  const [currentUserInput, setCurrentUserInput] = useState(''); // User's reflection or answer to AI's question
+  const [currentUserInput, setCurrentUserInput] = useState('');
   const [messages, setMessages] = useState<SocraticMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +40,7 @@ export default function SocraticModePage() {
   const handleTopicSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!topic.trim()) {
-      toast({ title: 'Topic Required', description: 'Please enter a topic to start the Socratic dialogue.', variant: 'destructive' });
+      toast({ title: 'Tópico Necessário', description: 'Por favor, insira um tópico para iniciar o diálogo socrático.', variant: 'destructive' });
       return;
     }
     setIsLoading(true);
@@ -48,27 +48,24 @@ export default function SocraticModePage() {
     setMessages([]);
 
     try {
-      // Initial call to cognitiveBattle, AI should ask the first question.
-      // We'll primarily use the 'question' part of the output for Socratic mode.
       const input: CognitiveBattleInput = { 
         topic,
-        // Adding a hint for Socratic mode in user context if the AI flow considers it.
-        // This is an attempt, actual AI behavior depends on the flow's prompt engineering.
-        userAnswer: "Let's begin our Socratic dialogue. Please ask me a question to start."
+        userAnswer: "Vamos começar nosso diálogo socrático. Por favor, me faça uma pergunta para iniciar.",
+        // We adjust the prompt in cognitive-battle flow to handle Socratic mode specifically.
       };
-      const result = await cognitiveBattle(input);
+      const result = await cognitiveBattle(input, true); // Pass a flag for Socratic mode
       
       setMessages([{ 
         id: Date.now().toString(), 
         sender: 'ai', 
-        text: result.question // Focus on the question
+        text: result.question 
       }]);
       setPreviousAiResponse(result.question);
       setIsTopicSet(true);
     } catch (err) {
       console.error(err);
-      setError('Failed to start Socratic dialogue. Please try again.');
-      toast({ title: 'Error', description: 'Failed to start Socratic dialogue.', variant: 'destructive' });
+      setError('Falha ao iniciar o diálogo socrático. Por favor, tente novamente.');
+      toast({ title: 'Erro', description: 'Falha ao iniciar o diálogo socrático.', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +74,7 @@ export default function SocraticModePage() {
   const handleUserInputSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!currentUserInput.trim()) {
-      toast({ title: 'Input Required', description: 'Please enter your thoughts or answer.', variant: 'destructive' });
+      toast({ title: 'Entrada Necessária', description: 'Por favor, insira seus pensamentos ou resposta.', variant: 'destructive' });
       return;
     }
 
@@ -93,9 +90,8 @@ export default function SocraticModePage() {
         userAnswer: currentUserInput,
         previousAiResponse: previousAiResponse,
       };
-      const result = await cognitiveBattle(input);
+      const result = await cognitiveBattle(input, true); // Pass a flag for Socratic mode
       
-      // In Socratic mode, we only care about the AI's next question.
       const newAiMessage: SocraticMessage = {
         id: Date.now().toString() + '-ai',
         sender: 'ai',
@@ -105,14 +101,14 @@ export default function SocraticModePage() {
       setPreviousAiResponse(result.question);
     } catch (err) {
       console.error(err);
-      setError('Failed to process your input. Please try again.');
+      setError('Falha ao processar sua entrada. Por favor, tente novamente.');
       const errorAiMessage: SocraticMessage = {
         id: Date.now().toString() + '-error',
         sender: 'ai',
-        text: "I encountered an error. Perhaps ponder this: what assumptions am I making? Or, simply try again.",
+        text: "Encontrei um erro. Talvez reflita sobre isto: quais suposições estou fazendo? Ou, simplesmente tente novamente.",
       };
       setMessages(prev => [...prev, errorAiMessage]);
-      toast({ title: 'Error', description: 'Failed to get AI response.', variant: 'destructive' });
+      toast({ title: 'Erro', description: 'Falha ao obter resposta da IA.', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
@@ -121,31 +117,31 @@ export default function SocraticModePage() {
   return (
     <div>
       <PageTitle
-        title="Socratic Mode"
-        description="Engage in deep reflection as the AI responds only with questions, guiding your thought process."
+        title="Modo Socrático"
+        description="Participe de uma profunda reflexão enquanto a IA responde apenas com perguntas, guiando seu processo de pensamento."
       />
 
       {!isTopicSet ? (
         <Card>
           <CardHeader>
-            <CardTitle>Enter the Agora</CardTitle>
-            <CardDescription>Choose a topic for your Socratic exploration.</CardDescription>
+            <CardTitle>Entre na Ágora</CardTitle>
+            <CardDescription>Escolha um tópico para sua exploração socrática.</CardDescription>
           </CardHeader>
           <form onSubmit={handleTopicSubmit}>
             <CardContent>
-              <Label htmlFor="topic">Topic of Dialogue</Label>
+              <Label htmlFor="topic">Tópico do Diálogo</Label>
               <Input
                 id="topic"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                placeholder="e.g., The Nature of Justice, The Meaning of Art, Consciousness"
+                placeholder="Ex: A Natureza da Justiça, O Significado da Arte, Consciência"
                 disabled={isLoading}
               />
             </CardContent>
             <CardFooter>
               <Button type="submit" disabled={isLoading || !topic.trim()}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Begin Dialogue
+                Iniciar Diálogo
               </Button>
             </CardFooter>
           </form>
@@ -156,10 +152,10 @@ export default function SocraticModePage() {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <MessageCircleQuestion className="h-6 w-6 mr-2 text-accent"/>
-                Socratic Dialogue: {topic}
+                Diálogo Socrático: {topic}
               </CardTitle>
               <Button variant="outline" size="sm" onClick={() => { setIsTopicSet(false); setTopic(''); setMessages([]); setPreviousAiResponse(undefined);}} className="mt-2">
-                Change Topic
+                Mudar Tópico
               </Button>
             </CardHeader>
             <CardContent>
@@ -170,7 +166,7 @@ export default function SocraticModePage() {
                       <div className={`max-w-[75%] p-3 rounded-lg shadow ${msg.sender === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
                         <div className="flex items-center mb-1">
                           {msg.sender === 'ai' ? <Bot className="h-5 w-5 mr-2 text-accent" /> : <User className="h-5 w-5 mr-2 text-primary-foreground" />}
-                          <span className="font-semibold">{msg.sender === 'ai' ? 'Socratic Guide' : 'You'}</span>
+                          <span className="font-semibold">{msg.sender === 'ai' ? 'Guia Socrático' : 'Você'}</span>
                         </div>
                         <p className="text-sm">{msg.text}</p>
                       </div>
@@ -181,7 +177,7 @@ export default function SocraticModePage() {
                         <div className="max-w-[75%] p-3 rounded-lg shadow bg-muted flex items-center">
                           <Bot className="h-5 w-5 mr-2 text-accent" />
                           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                          <span className="ml-2 text-sm text-muted-foreground">Formulating question...</span>
+                          <span className="ml-2 text-sm text-muted-foreground">Formulando pergunta...</span>
                         </div>
                       </div>
                   )}
@@ -193,13 +189,13 @@ export default function SocraticModePage() {
                 <Textarea
                   value={currentUserInput}
                   onChange={(e) => setCurrentUserInput(e.target.value)}
-                  placeholder="Reflect and respond..."
+                  placeholder="Reflita e responda..."
                   disabled={isLoading}
                   className="flex-grow"
                   rows={2}
                 />
                 <Button type="submit" disabled={isLoading || !currentUserInput.trim()} className="self-end">
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send'}
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Enviar'}
                 </Button>
               </form>
             </CardFooter>

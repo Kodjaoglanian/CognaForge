@@ -42,12 +42,12 @@ export default function CognitiveBattlePage() {
   const handleTopicSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!topic.trim()) {
-      toast({ title: 'Topic Required', description: 'Please enter a topic to start the battle.', variant: 'destructive' });
+      toast({ title: 'Tópico Necessário', description: 'Por favor, insira um tópico para iniciar a batalha.', variant: 'destructive' });
       return;
     }
     setIsLoading(true);
     setError(null);
-    setMessages([]); // Clear previous messages when a new topic is set
+    setMessages([]); 
 
     try {
       const input: CognitiveBattleInput = { topic };
@@ -57,15 +57,15 @@ export default function CognitiveBattlePage() {
         id: Date.now().toString(), 
         sender: 'ai', 
         text: result.question,
-        evaluation: result.evaluation, // Initial evaluation might be generic
-        feedback: result.feedback // Initial feedback might be generic
+        evaluation: result.evaluation, 
+        feedback: result.feedback 
       }]);
-      setPreviousAiResponse(result.question); // Store AI's question as previous response for next turn
+      setPreviousAiResponse(result.question); 
       setIsTopicSet(true);
     } catch (err) {
       console.error(err);
-      setError('Failed to start cognitive battle. Please try again.');
-      toast({ title: 'Error', description: 'Failed to start cognitive battle.', variant: 'destructive' });
+      setError('Falha ao iniciar a batalha cognitiva. Por favor, tente novamente.');
+      toast({ title: 'Erro', description: 'Falha ao iniciar a batalha cognitiva.', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +74,7 @@ export default function CognitiveBattlePage() {
   const handleAnswerSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!currentAnswer.trim()) {
-      toast({ title: 'Answer Required', description: 'Please enter your answer.', variant: 'destructive' });
+      toast({ title: 'Resposta Necessária', description: 'Por favor, insira sua resposta.', variant: 'destructive' });
       return;
     }
 
@@ -100,17 +100,17 @@ export default function CognitiveBattlePage() {
         feedback: result.feedback
       };
       setMessages(prev => [...prev, newAiMessage]);
-      setPreviousAiResponse(result.question); // Update previous AI response
+      setPreviousAiResponse(result.question); 
     } catch (err) {
       console.error(err);
-      setError('Failed to process your answer. Please try again.');
+      setError('Falha ao processar sua resposta. Por favor, tente novamente.');
       const errorAiMessage: Message = {
         id: Date.now().toString() + '-error',
         sender: 'ai',
-        text: "I encountered an error. Please try rephrasing or try again.",
+        text: "Encontrei um erro. Por favor, tente reformular ou tente novamente.",
       };
       setMessages(prev => [...prev, errorAiMessage]);
-      toast({ title: 'Error', description: 'Failed to get AI response.', variant: 'destructive' });
+      toast({ title: 'Erro', description: 'Falha ao obter resposta da IA.', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
@@ -119,31 +119,31 @@ export default function CognitiveBattlePage() {
   return (
     <div>
       <PageTitle
-        title="Cognitive Battle"
-        description="Challenge your understanding. The AI will ask questions, evaluate your answers, and provide feedback to deepen your knowledge."
+        title="Batalha Cognitiva"
+        description="Desafie sua compreensão. A IA fará perguntas, avaliará suas respostas e fornecerá feedback para aprofundar seu conhecimento."
       />
 
       {!isTopicSet ? (
         <Card>
           <CardHeader>
-            <CardTitle>Choose Your Battlefield</CardTitle>
-            <CardDescription>Enter a topic to begin your cognitive battle.</CardDescription>
+            <CardTitle>Escolha Seu Campo de Batalha</CardTitle>
+            <CardDescription>Insira um tópico para começar sua batalha cognitiva.</CardDescription>
           </CardHeader>
           <form onSubmit={handleTopicSubmit}>
             <CardContent>
-              <Label htmlFor="topic">Topic</Label>
+              <Label htmlFor="topic">Tópico</Label>
               <Input
                 id="topic"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                placeholder="e.g., Quantum Physics, Stoic Philosophy, Culinary Arts"
+                placeholder="Ex: Física Quântica, Filosofia Estoica, Artes Culinárias"
                 disabled={isLoading}
               />
             </CardContent>
             <CardFooter>
               <Button type="submit" disabled={isLoading || !topic.trim()}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Start Battle
+                Iniciar Batalha
               </Button>
             </CardFooter>
           </form>
@@ -152,9 +152,9 @@ export default function CognitiveBattlePage() {
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Battle Arena: {topic}</CardTitle>
+              <CardTitle>Arena de Batalha: {topic}</CardTitle>
               <Button variant="outline" size="sm" onClick={() => { setIsTopicSet(false); setTopic(''); setMessages([]); setPreviousAiResponse(undefined);}} className="mt-2">
-                Change Topic
+                Mudar Tópico
               </Button>
             </CardHeader>
             <CardContent>
@@ -165,13 +165,13 @@ export default function CognitiveBattlePage() {
                       <div className={`max-w-[75%] p-3 rounded-lg shadow ${msg.sender === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
                         <div className="flex items-center mb-1">
                           {msg.sender === 'ai' ? <Bot className="h-5 w-5 mr-2 text-accent" /> : <User className="h-5 w-5 mr-2 text-primary-foreground" />}
-                          <span className="font-semibold">{msg.sender === 'ai' ? 'CognaForge AI' : 'You'}</span>
+                          <span className="font-semibold">{msg.sender === 'ai' ? 'IA CognaForge' : 'Você'}</span>
                         </div>
                         <p className="text-sm">{msg.text}</p>
                         {msg.sender === 'ai' && msg.evaluation && (
                           <Card className="mt-2 bg-background/50">
                             <CardHeader className="p-2">
-                              <CardTitle className="text-xs font-semibold">Evaluation</CardTitle>
+                              <CardTitle className="text-xs font-semibold">Avaliação</CardTitle>
                             </CardHeader>
                             <CardContent className="p-2 text-xs">
                               {msg.evaluation}
@@ -181,7 +181,7 @@ export default function CognitiveBattlePage() {
                         {msg.sender === 'ai' && msg.feedback && (
                            <Card className="mt-2 bg-background/50">
                             <CardHeader className="p-2">
-                              <CardTitle className="text-xs font-semibold">Feedback & Insights</CardTitle>
+                              <CardTitle className="text-xs font-semibold">Feedback e Insights</CardTitle>
                             </CardHeader>
                             <CardContent className="p-2 text-xs">
                               {msg.feedback}
@@ -196,7 +196,7 @@ export default function CognitiveBattlePage() {
                         <div className="max-w-[75%] p-3 rounded-lg shadow bg-muted flex items-center">
                           <Bot className="h-5 w-5 mr-2 text-accent" />
                           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                          <span className="ml-2 text-sm text-muted-foreground">AI is thinking...</span>
+                          <span className="ml-2 text-sm text-muted-foreground">IA pensando...</span>
                         </div>
                       </div>
                   )}
@@ -208,13 +208,13 @@ export default function CognitiveBattlePage() {
                 <Textarea
                   value={currentAnswer}
                   onChange={(e) => setCurrentAnswer(e.target.value)}
-                  placeholder="Type your answer..."
+                  placeholder="Digite sua resposta..."
                   disabled={isLoading}
                   className="flex-grow"
                   rows={2}
                 />
                 <Button type="submit" disabled={isLoading || !currentAnswer.trim()} className="self-end">
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send'}
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Enviar'}
                 </Button>
               </form>
             </CardFooter>
