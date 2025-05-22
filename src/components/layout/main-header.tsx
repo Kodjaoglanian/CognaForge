@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { APP_NAME } from '@/lib/constants';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
@@ -23,12 +24,12 @@ export function MainHeader() {
         </div>
         
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          {/* Placeholder for UserNav or Login/Signup buttons */}
-          {/* <UserNav /> */}
-          <Button variant="ghost" size="sm">
-            <LogIn className="mr-2 h-4 w-4" />
-            Entrar
-          </Button>
+          <Link href="/login" passHref>
+            <Button variant="ghost" size="sm">
+              <LogIn className="mr-2 h-4 w-4" />
+              Entrar
+            </Button>
+          </Link>
         </div>
       </div>
     </header>
