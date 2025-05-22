@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Simula uma entrevista de emprego com base no cargo e persona do entrevistador.
@@ -43,12 +44,11 @@ Sua persona como entrevistador é: "{{interviewerPersona}}".
 
 Histórico da Entrevista até agora:
 {{#if interviewHistory}}
-  {{#each interviewHistory}}
-    {{#if (eq sender "user")}}Aluno: {{message}}{{/if}}
-    {{#if (eq sender "ai")}}Entrevistador (IA): {{message}}{{/if}}
-  {{/each}}
+{{#each interviewHistory}}
+[{{this.sender}}]: {{this.message}}
+{{/each}}
 {{else}}
-  (Esta é a primeira pergunta da entrevista)
+(Esta é a primeira pergunta da entrevista)
 {{/if}}
 
 {{#if userAnswer}}
@@ -62,6 +62,7 @@ Agora, forneça:
 {{/if}}
 
 Instruções para a IA:
+-   No 'Histórico da Entrevista', [user]: precede a resposta do aluno, e [ai]: precede a sua pergunta (IA).
 -   Faça perguntas abertas e específicas do cargo.
 -   Adapte o tom e o tipo de pergunta à persona do entrevistador definida.
 -   Se o usuário fornecer uma resposta, o feedback deve ser útil e acionável.
@@ -87,3 +88,4 @@ const interviewSimulatorFlow = ai.defineFlow(
     return output!;
   }
 );
+
