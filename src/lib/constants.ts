@@ -12,7 +12,8 @@ import {
   Briefcase,
   GraduationCap,
   BrainCircuit,
-  ClipboardCopy, // Novo ícone para Flashcards
+  ClipboardCopy,
+  FileText, // Ícone para Analisador de Textos
 } from 'lucide-react';
 
 export interface NavItem {
@@ -47,6 +48,12 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/cognitive-bias-navigator',
     icon: BrainCircuit,
     label: 'Vieses',
+  },
+  {
+    title: 'Analisador de Textos',
+    href: '/text-analyzer',
+    icon: FileText,
+    label: 'Analisar Texto',
   },
   {
     title: 'Batalhas Cognitivas',
