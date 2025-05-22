@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { APP_NAME } from '@/lib/constants';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { LogIn } from 'lucide-react'; 
+// LogIn icon removed as the button is removed
 
 export function MainHeader() {
   return (
@@ -24,12 +24,7 @@ export function MainHeader() {
         </div>
         
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <Link href="/login" passHref>
-            <Button variant="ghost" size="sm">
-              <LogIn className="mr-2 h-4 w-4" />
-              Entrar
-            </Button>
-          </Link>
+          {/* Login button removed */}
         </div>
       </div>
     </header>
