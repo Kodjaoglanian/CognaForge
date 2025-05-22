@@ -11,10 +11,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { summarizeNote, type SummarizeNoteInput } from '@/ai/flows/summarize-note-flow';
 import { writingAssistant, type WritingAssistantInput } from '@/ai/flows/writing-assistant-flow';
-import { Loader2, AlertCircle, PlusCircle, Save, FileText, Trash2, StickyNote, Lightbulb, Wand2, MessageSquarePlus, Copy, CornerDownLeft } from 'lucide-react';
+import { Loader2, AlertCircle, PlusCircle, Save, FileText, Trash2, StickyNote, Lightbulb, Wand2, MessageSquarePlus, Copy, CornerDownLeft, Maximize2, Minimize2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownRenderer } from '@/components/shared/markdown-renderer';
-import { MarkdownEditorToolbar } from '@/components/shared/MarkdownEditorToolbar'; // Importando a barra de ferramentas
+import { MarkdownEditorToolbar } from '@/components/shared/MarkdownEditorToolbar';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
@@ -41,8 +41,9 @@ export default function AINotesPage() {
   const [writingPrompt, setWritingPrompt] = useState('');
   const [assistantSuggestion, setAssistantSuggestion] = useState<string | undefined>(undefined);
   const [isGeneratingSuggestion, setIsGeneratingSuggestion] = useState(false);
+  const [isPreviewEnlarged, setIsPreviewEnlarged] = useState(false);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null); // Ref para a Textarea
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -84,6 +85,7 @@ export default function AINotesPage() {
     setAssistantSuggestion(undefined);
     setWritingPrompt('');
     setError(null);
+    setIsPreviewEnlarged(false);
   };
 
   const handleSelectNote = (noteId: string) => {
@@ -97,6 +99,7 @@ export default function AINotesPage() {
       setAssistantSuggestion(undefined);
       setWritingPrompt('');
       setError(null);
+      setIsPreviewEnlarged(false);
     }
   };
 
@@ -127,6 +130,7 @@ export default function AINotesPage() {
       setCurrentSummary(undefined);
       setAssistantSuggestion(undefined);
       setWritingPrompt('');
+      setIsPreviewEnlarged(false);
     }
     toast({ title: 'Anotação Excluída!', variant: 'default' });
     setIsLoading(false);
@@ -293,12 +297,12 @@ export default function AINotesPage() {
                   onChange={(e) => setCurrentTitle(e.target.value)}
                   placeholder="Título da sua anotação..."
                   className="text-xl font-semibold border-0 shadow-none focus-visible:ring-0 px-1"
-                  disabled={isLoading || isSummarizing || isGeneratingSuggestion}
+                  disabled={isLoading || isSummarizing || isGeneratingSuggestion || isPreviewEnlarged}
                 />
               </CardHeader>
               
               <CardContent className="flex-grow flex flex-col gap-4 overflow-y-auto p-6">
-                <div className="flex flex-col flex-grow min-h-[calc(40vh-50px)]"> {/* Editor com altura mínima maior */}
+                <div className={cn("flex flex-col flex-grow min-h-[calc(40vh-50px)]", { 'hidden': isPreviewEnlarged })}> {/* Editor */}
                   <Label htmlFor="note-content" className="mb-1 text-sm font-medium">Conteúdo (Markdown)</Label>
                   <MarkdownEditorToolbar 
                     content={currentContent}
@@ -316,59 +320,77 @@ export default function AINotesPage() {
                   />
                 </div>
                 
-                <div className="flex flex-col flex-grow min-h-[calc(40vh-50px)]"> {/* Preview com altura mínima maior */}
-                    <Label className="mb-1 text-sm font-medium">Pré-visualização</Label>
+                {/* Preview Section */}
+                <div className={cn(
+                  "flex flex-col",
+                  isPreviewEnlarged ? "flex-grow h-full" : "flex-grow min-h-[calc(40vh-50px)]"
+                )}>
+                    <div className="flex justify-between items-center mb-1">
+                        <Label className="text-sm font-medium">Pré-visualização</Label>
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => setIsPreviewEnlarged(!isPreviewEnlarged)}
+                            className="p-1 h-auto"
+                            title={isPreviewEnlarged ? "Reduzir Pré-visualização" : "Ampliar Pré-visualização"}
+                        >
+                            {isPreviewEnlarged ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+                            <span className="ml-1 text-xs sr-only sm:not-sr-only">{isPreviewEnlarged ? "Reduzir" : "Ampliar"}</span>
+                        </Button>
+                    </div>
                     <ScrollArea className="flex-grow border rounded-md p-1 bg-muted/30 shadow-inner">
                          <MarkdownRenderer content={currentContent || "Comece a digitar para ver a pré-visualização..."} className="bg-transparent shadow-none" />
                     </ScrollArea>
                 </div>
 
-                {currentSummary && (
-                    <Card className="w-full bg-primary/10 p-3 flex-shrink-0">
-                        <CardTitle className="text-base mb-1 flex items-center text-primary"><Lightbulb className="mr-2 h-4 w-4"/> Resumo da IA</CardTitle>
-                        <ScrollArea className="max-h-32">
-                           <MarkdownRenderer content={currentSummary} className="text-sm bg-transparent p-0 shadow-none text-primary/90"/>
-                        </ScrollArea>
-                    </Card>
-                )}
+                <div className={cn("space-y-4 flex-shrink-0", { 'hidden': isPreviewEnlarged })}>
+                    {currentSummary && (
+                        <Card className="w-full bg-primary/10 p-3">
+                            <CardTitle className="text-base mb-1 flex items-center text-primary"><Lightbulb className="mr-2 h-4 w-4"/> Resumo da IA</CardTitle>
+                            <ScrollArea className="max-h-32">
+                               <MarkdownRenderer content={currentSummary} className="text-sm bg-transparent p-0 shadow-none text-primary/90"/>
+                            </ScrollArea>
+                        </Card>
+                    )}
 
-                <form onSubmit={handleGenerateSuggestion} className="space-y-3 flex-shrink-0">
-                   <Separator/>
-                   <Label htmlFor="writing-prompt" className="text-sm font-medium flex items-center"><MessageSquarePlus className="mr-2 h-4 w-4 text-accent"/>Assistente de Escrita IA</Label>
-                   <Input
-                     id="writing-prompt"
-                     value={writingPrompt}
-                     onChange={(e) => setWritingPrompt(e.target.value)}
-                     placeholder="Peça ajuda à IA (ex: Continue esta ideia, Crie 3 pontos sobre...)"
-                     disabled={isLoading || isSummarizing || isGeneratingSuggestion}
-                   />
-                   <Button type="submit" variant="outline" size="sm" disabled={isGeneratingSuggestion || isLoading || isSummarizing || !writingPrompt.trim()}>
-                     {isGeneratingSuggestion ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                     Gerar Sugestão
-                   </Button>
-                </form>
+                    <form onSubmit={handleGenerateSuggestion} className="space-y-3">
+                       <Separator/>
+                       <Label htmlFor="writing-prompt" className="text-sm font-medium flex items-center"><MessageSquarePlus className="mr-2 h-4 w-4 text-accent"/>Assistente de Escrita IA</Label>
+                       <Input
+                         id="writing-prompt"
+                         value={writingPrompt}
+                         onChange={(e) => setWritingPrompt(e.target.value)}
+                         placeholder="Peça ajuda à IA (ex: Continue esta ideia, Crie 3 pontos sobre...)"
+                         disabled={isLoading || isSummarizing || isGeneratingSuggestion}
+                       />
+                       <Button type="submit" variant="outline" size="sm" disabled={isGeneratingSuggestion || isLoading || isSummarizing || !writingPrompt.trim()}>
+                         {isGeneratingSuggestion ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                         Gerar Sugestão
+                       </Button>
+                    </form>
 
-                {assistantSuggestion && (
-                    <Card className="w-full bg-accent/10 p-3 flex-shrink-0">
-                        <CardTitle className="text-base mb-1 flex items-center text-accent-foreground"><Lightbulb className="mr-2 h-4 w-4"/> Sugestão da IA</CardTitle>
-                        <ScrollArea className="max-h-40">
-                            <MarkdownRenderer content={assistantSuggestion} className="text-sm bg-transparent p-0 shadow-none"/>
-                        </ScrollArea>
-                        <div className="flex gap-2 mt-2">
-                            <Button size="sm" variant="ghost" onClick={handleCopySuggestion}><Copy className="mr-1 h-3 w-3"/>Copiar</Button>
-                            <Button size="sm" variant="ghost" onClick={handleAppendSuggestion}><CornerDownLeft className="mr-1 h-3 w-3"/>Anexar à Nota</Button>
+                    {assistantSuggestion && (
+                        <Card className="w-full bg-accent/10 p-3">
+                            <CardTitle className="text-base mb-1 flex items-center text-accent-foreground"><Lightbulb className="mr-2 h-4 w-4"/> Sugestão da IA</CardTitle>
+                            <ScrollArea className="max-h-40">
+                                <MarkdownRenderer content={assistantSuggestion} className="text-sm bg-transparent p-0 shadow-none"/>
+                            </ScrollArea>
+                            <div className="flex gap-2 mt-2">
+                                <Button size="sm" variant="ghost" onClick={handleCopySuggestion}><Copy className="mr-1 h-3 w-3"/>Copiar</Button>
+                                <Button size="sm" variant="ghost" onClick={handleAppendSuggestion}><CornerDownLeft className="mr-1 h-3 w-3"/>Anexar à Nota</Button>
+                            </div>
+                        </Card>
+                    )}
+                    
+                     {error && (
+                        <div className="text-sm text-destructive p-2 bg-destructive/10 rounded-md flex items-center w-full">
+                            <AlertCircle className="h-4 w-4 mr-2" /> {error}
                         </div>
-                    </Card>
-                )}
-                
-                 {error && (
-                    <div className="text-sm text-destructive p-2 bg-destructive/10 rounded-md flex items-center w-full flex-shrink-0">
-                        <AlertCircle className="h-4 w-4 mr-2" /> {error}
-                    </div>
-                )}
+                    )}
+                </div>
               </CardContent>
 
-              <CardFooter className="flex-shrink-0 border-t pt-4 flex flex-wrap gap-2 justify-start">
+              <CardFooter className={cn("flex-shrink-0 border-t pt-4 flex flex-wrap gap-2 justify-start", { 'hidden': isPreviewEnlarged })}>
                     <Button onClick={handleSaveNote} disabled={isLoading || isSummarizing || isGeneratingSuggestion || !currentTitle.trim()}>
                       {isLoading && !isSummarizing && !isGeneratingSuggestion ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                       Salvar Anotação
