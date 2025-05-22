@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, type FormEvent, useEffect } from 'react';
+import { useState, type FormEvent, useEffect, useRef } from 'react';
 import { PageTitle } from '@/components/shared/page-title';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,10 +10,11 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { summarizeNote, type SummarizeNoteInput } from '@/ai/flows/summarize-note-flow';
-import { writingAssistant, type WritingAssistantInput } from '@/ai/flows/writing-assistant-flow'; // Importando o novo fluxo
+import { writingAssistant, type WritingAssistantInput } from '@/ai/flows/writing-assistant-flow';
 import { Loader2, AlertCircle, PlusCircle, Save, FileText, Trash2, StickyNote, Lightbulb, Wand2, MessageSquarePlus, Copy, CornerDownLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownRenderer } from '@/components/shared/markdown-renderer';
+import { MarkdownEditorToolbar } from '@/components/shared/MarkdownEditorToolbar'; // Importando a barra de ferramentas
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
@@ -33,15 +34,15 @@ export default function AINotesPage() {
   const [currentContent, setCurrentContent] = useState('');
   const [currentSummary, setCurrentSummary] = useState<string | undefined>(undefined);
 
-  const [isLoading, setIsLoading] = useState(false); // General loading for save/delete
+  const [isLoading, setIsLoading] = useState(false);
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Estados para o Assistente de Escrita
   const [writingPrompt, setWritingPrompt] = useState('');
   const [assistantSuggestion, setAssistantSuggestion] = useState<string | undefined>(undefined);
   const [isGeneratingSuggestion, setIsGeneratingSuggestion] = useState(false);
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null); // Ref para a Textarea
   const { toast } = useToast();
 
   useEffect(() => {
@@ -72,7 +73,7 @@ export default function AINotesPage() {
     const newNote: Note = {
       id: Date.now().toString(),
       title: 'Nova Anotação',
-      content: `# Comece a escrever sua anotação aqui...\n\nUse **Markdown** para formatar seu texto.`,
+      content: `# Comece a escrever sua anotação aqui...\n\nUse **Markdown** para formatar seu texto. A barra de ferramentas acima pode ajudar!`,
       createdAt: Date.now(),
     };
     setNotes(prev => [newNote, ...prev].sort((a,b) => b.createdAt - a.createdAt));
@@ -195,16 +196,16 @@ export default function AINotesPage() {
   const handleAppendSuggestion = () => {
     if (assistantSuggestion) {
       setCurrentContent(prev => `${prev}\n\n${assistantSuggestion}`);
-      setAssistantSuggestion(undefined); // Limpa a sugestão após anexar
+      setAssistantSuggestion(undefined); 
       toast({ title: 'Anexado!', description: 'Sugestão da IA adicionada ao final da sua nota.' });
     }
   };
   
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)]"> {/* Ajustado para dar mais espaço, ex: 8rem */}
+    <div className="flex flex-col h-[calc(100vh-8rem)]">
       <PageTitle
         title="Caderno IA de Anotações"
-        description="Crie, edite e organize suas anotações. Use a IA para resumos e assistência de escrita."
+        description="Crie, edite e organize suas anotações com Markdown. Use a IA para resumos e assistência de escrita."
       />
 
       <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-6 overflow-hidden">
@@ -297,19 +298,25 @@ export default function AINotesPage() {
               </CardHeader>
               
               <CardContent className="flex-grow flex flex-col gap-4 overflow-y-auto p-6">
-                <div className="flex flex-col flex-grow min-h-[200px]"> {/* Editor com altura mínima e crescimento */}
+                <div className="flex flex-col flex-grow min-h-[calc(40vh-50px)]"> {/* Editor com altura mínima maior */}
                   <Label htmlFor="note-content" className="mb-1 text-sm font-medium">Conteúdo (Markdown)</Label>
+                  <MarkdownEditorToolbar 
+                    content={currentContent}
+                    setContent={setCurrentContent}
+                    textareaRef={textareaRef}
+                  />
                   <Textarea
                     id="note-content"
+                    ref={textareaRef}
                     value={currentContent}
                     onChange={(e) => setCurrentContent(e.target.value)}
                     placeholder="Escreva sua anotação aqui usando Markdown..."
-                    className="flex-grow resize-none text-base"
+                    className="flex-grow resize-none text-base rounded-t-none" 
                     disabled={isLoading || isSummarizing || isGeneratingSuggestion}
                   />
                 </div>
                 
-                <div className="flex flex-col flex-grow min-h-[200px]"> {/* Preview com altura mínima e crescimento */}
+                <div className="flex flex-col flex-grow min-h-[calc(40vh-50px)]"> {/* Preview com altura mínima maior */}
                     <Label className="mb-1 text-sm font-medium">Pré-visualização</Label>
                     <ScrollArea className="flex-grow border rounded-md p-1 bg-muted/30 shadow-inner">
                          <MarkdownRenderer content={currentContent || "Comece a digitar para ver a pré-visualização..."} className="bg-transparent shadow-none" />
@@ -325,7 +332,6 @@ export default function AINotesPage() {
                     </Card>
                 )}
 
-                {/* Seção do Assistente de Escrita */}
                 <form onSubmit={handleGenerateSuggestion} className="space-y-3 flex-shrink-0">
                    <Separator/>
                    <Label htmlFor="writing-prompt" className="text-sm font-medium flex items-center"><MessageSquarePlus className="mr-2 h-4 w-4 text-accent"/>Assistente de Escrita IA</Label>
@@ -379,6 +385,3 @@ export default function AINotesPage() {
     </div>
   );
 }
-
-
-    
