@@ -13,4 +13,5 @@ import '@/ai/flows/cognitive-bias-navigator-flow.ts';
 import '@/ai/flows/ai-flashcard-generator-flow.ts';
 import '@/ai/flows/text-analyzer-flow.ts';
 import '@/ai/flows/summarize-note-flow.ts';
-import '@/ai/flows/writing-assistant-flow.ts'; // Adicionado o fluxo de assistente de escrita
+import '@/ai/flows/writing-assistant-flow.ts';
+import '@/ai/flows/daily-planner-flow.ts'; // Adicionado o fluxo do planejador diário

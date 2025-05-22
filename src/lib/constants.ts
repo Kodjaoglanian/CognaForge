@@ -15,7 +15,7 @@ import {
   ClipboardCopy,
   FileText,
   StickyNote,
-  CalendarDays, // Adicionado CalendarDays
+  CalendarDays,
 } from 'lucide-react';
 
 export interface NavItem {
@@ -64,7 +64,7 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Analisar Texto',
   },
   {
-    title: 'Calendário IA', // Adicionado item do Calendário
+    title: 'Calendário IA',
     href: '/calendar',
     icon: CalendarDays,
     label: 'Calendário',
