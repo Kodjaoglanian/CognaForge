@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter as UiCardFooter } from '@/components/ui/card';
 import { NAV_ITEMS } from '@/lib/constants';
 import Link from 'next/link';
-import { ArrowRight, Lightbulb, Puzzle, Loader2, Brain } from 'lucide-react';
+import { ArrowRight, Lightbulb, Puzzle, Loader2, Brain, ClipboardCopy } from 'lucide-react';
 import { generateDailyTeaser, type DailyTeaserOutput } from '@/ai/flows/daily-teaser-flow';
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownRenderer } from '@/components/shared/markdown-renderer';
@@ -167,6 +167,7 @@ export default function DashboardPage() {
             Com nossas ferramentas alimentadas por IA, você irá:
           </p>
           <ul className="list-disc list-inside space-y-1 pl-4">
+            <li><span className="font-semibold text-primary">Gerar</span> flashcards personalizados para qualquer tópico.</li>
             <li><span className="font-semibold text-primary">Desmistificar</span> conceitos complexos com explicações claras e analogias.</li>
             <li><span className="font-semibold text-primary">Navegar</span> e entender vieses cognitivos que afetam seu pensamento.</li>
             <li><span className="font-semibold text-primary">Debater</span> ideias e fortalecer sua argumentação em duelos com a IA.</li>
@@ -186,6 +187,8 @@ export default function DashboardPage() {
 
 function getFeatureDescription(href: string): string {
   switch (href) {
+    case '/ai-flashcard-generator':
+      return 'Crie flashcards personalizados instantaneamente com IA para qualquer tópico de estudo.';
     case '/cognitive-battle':
       return 'Participe de sessões de P&R com IA que se adaptam à sua compreensão, expandindo seus limites cognitivos.';
     case '/argument-duel':

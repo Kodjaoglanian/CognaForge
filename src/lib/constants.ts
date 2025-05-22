@@ -11,7 +11,8 @@ import {
   Puzzle,
   Briefcase,
   GraduationCap,
-  BrainCircuit, // Novo ícone
+  BrainCircuit,
+  ClipboardCopy, // Novo ícone para Flashcards
 } from 'lucide-react';
 
 export interface NavItem {
@@ -28,6 +29,12 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/',
     icon: LayoutDashboard,
     label: 'Painel',
+  },
+  {
+    title: 'Gerador de Flashcards IA',
+    href: '/ai-flashcard-generator',
+    icon: ClipboardCopy,
+    label: 'Flashcards',
   },
   {
     title: 'Clarificador de Conceitos',
