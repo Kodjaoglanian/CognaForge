@@ -39,12 +39,12 @@ export default function LoginPage() {
 
     // Simulação de chamada de API
     setTimeout(() => {
-      if (email === 'teste@cogniforge.com' && password === 'senha123') {
+      if (email === 'usuario@exemplo.com' && password === 'senha123') {
         setError(null);
         // router.push('/'); // Redirecionaria para o painel
-        alert('Login simulado com sucesso! (Implementação real necessária)');
+        alert('Login simulado com sucesso! Redirecionamento não implementado. (Implementação real de auth necessária)');
       } else {
-        setError('Credenciais inválidas. Use email "teste@cogniforge.com" e senha "senha123" para a simulação.');
+        setError('Credenciais inválidas. Para a simulação, use email "usuario@exemplo.com" e senha "senha123".');
       }
       setIsLoading(false);
     }, 1000);
@@ -116,4 +116,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

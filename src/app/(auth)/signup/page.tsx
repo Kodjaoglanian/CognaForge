@@ -55,7 +55,7 @@ export default function SignupPage() {
     setTimeout(() => {
       // Simulação simples
       if (email && password && fullName) {
-         setSuccess(`Conta para ${fullName} criada com sucesso! (Simulação). Você seria redirecionado ou poderia fazer login.`);
+         setSuccess(`Conta para ${fullName} "criada" com sucesso! (Simulação). Para simular o login, vá para a página de login e use o email "usuario@exemplo.com" e a senha "senha123".`);
          // router.push('/login');
       } else {
         setError('Ocorreu um erro ao criar a conta. Verifique os campos. (Simulação)');
