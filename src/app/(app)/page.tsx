@@ -209,3 +209,4 @@ function getFeatureDescription(href: string): string {
       return 'Explore esta funcionalidade para aprimorar sua jornada de aprendizado.';
   }
 }
+

@@ -13,6 +13,7 @@ import { APP_NAME } from '@/lib/constants';
 // import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,6 +28,10 @@ export default function SignupPage() {
       setError('As senhas não coincidem.');
       return;
     }
+    if (!fullName.trim()) {
+      setError('Por favor, informe seu nome completo.');
+      return;
+    }
     setIsLoading(true);
     setError(null);
     setSuccess(null);
@@ -35,7 +40,8 @@ export default function SignupPage() {
     // Exemplo com Firebase (requer configuração do SDK do Firebase):
     /*
     try {
-      // await firebaseCreateUserWithEmailAndPassword(email, password);
+      // const userCredential = await firebaseCreateUserWithEmailAndPassword(email, password);
+      // await firebaseUpdateProfile(userCredential.user, { displayName: fullName });
       // setSuccess('Conta criada com sucesso! Você pode fazer login agora.');
       // router.push('/login');
     } catch (err: any) {
@@ -48,11 +54,11 @@ export default function SignupPage() {
     // Simulação de chamada de API
     setTimeout(() => {
       // Simulação simples
-      if (email && password) {
-         setSuccess('Conta criada com sucesso! (Simulação). Você seria redirecionado ou poderia fazer login.');
+      if (email && password && fullName) {
+         setSuccess(`Conta para ${fullName} criada com sucesso! (Simulação). Você seria redirecionado ou poderia fazer login.`);
          // router.push('/login');
       } else {
-        setError('Ocorreu um erro ao criar a conta. (Simulação)');
+        setError('Ocorreu um erro ao criar a conta. Verifique os campos. (Simulação)');
       }
       setIsLoading(false);
     }, 1000);
@@ -73,6 +79,18 @@ export default function SignupPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
+              <Label htmlFor="fullName">Nome Completo</Label>
+              <Input
+                id="fullName"
+                type="text"
+                placeholder="Seu nome completo"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -89,7 +107,7 @@ export default function SignupPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="Crie uma senha forte"
+                placeholder="Crie uma senha forte (mín. 6 caracteres)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -138,3 +156,4 @@ export default function SignupPage() {
     </div>
   );
 }
+

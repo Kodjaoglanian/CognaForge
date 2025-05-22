@@ -44,7 +44,7 @@ export default function LoginPage() {
         // router.push('/'); // Redirecionaria para o painel
         alert('Login simulado com sucesso! (Implementação real necessária)');
       } else {
-        setError('Credenciais inválidas. (Este é um login simulado)');
+        setError('Credenciais inválidas. Use email "teste@cogniforge.com" e senha "senha123" para a simulação.');
       }
       setIsLoading(false);
     }, 1000);
@@ -116,3 +116,4 @@ export default function LoginPage() {
     </div>
   );
 }
+
