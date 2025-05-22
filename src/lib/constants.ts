@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from 'lucide-react';
 import {
   LayoutDashboard,
@@ -8,7 +9,8 @@ import {
   MessageCircleQuestion,
   Settings,
   Puzzle,
-  Briefcase, // Novo ícone para Simulador de Entrevistas
+  Briefcase,
+  GraduationCap, // Novo ícone para Clarificador de Conceitos
 } from 'lucide-react';
 
 export interface NavItem {
@@ -25,6 +27,12 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/',
     icon: LayoutDashboard,
     label: 'Painel',
+  },
+  {
+    title: 'Clarificador de Conceitos',
+    href: '/concept-clarifier',
+    icon: GraduationCap,
+    label: 'Clarificar',
   },
   {
     title: 'Batalhas Cognitivas',
@@ -57,7 +65,7 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Socrático',
   },
   {
-    title: 'Simulador de Entrevistas', // Nova funcionalidade
+    title: 'Simulador de Entrevistas',
     href: '/interview-simulator',
     icon: Briefcase,
     label: 'Entrevistas',
@@ -71,3 +79,4 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const APP_NAME = "CognaForge";
+
