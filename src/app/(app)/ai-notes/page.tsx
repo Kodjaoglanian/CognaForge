@@ -14,6 +14,7 @@ import { Loader2, AlertCircle, PlusCircle, Save, FileText, Trash2, StickyNote, L
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownRenderer } from '@/components/shared/markdown-renderer';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 interface Note {
   id: string;
@@ -38,17 +39,31 @@ export default function AINotesPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Load notes from localStorage on initial render (simulated persistence)
-    const savedNotes = localStorage.getItem('ai-notes-data');
-    if (savedNotes) {
-      setNotes(JSON.parse(savedNotes));
+    // Load notes from localStorage on initial render
+    try {
+      const savedNotes = localStorage.getItem('ai-notes-data');
+      if (savedNotes) {
+        const parsedNotes = JSON.parse(savedNotes);
+        if (Array.isArray(parsedNotes)) {
+          setNotes(parsedNotes.sort((a,b) => b.createdAt - a.createdAt));
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load notes from localStorage", e);
+      // Optionally clear corrupted data
+      // localStorage.removeItem('ai-notes-data');
     }
   }, []);
 
   useEffect(() => {
     // Save notes to localStorage whenever notes array changes
-    if (notes.length > 0 || localStorage.getItem('ai-notes-data')) {
-        localStorage.setItem('ai-notes-data', JSON.stringify(notes));
+    // Only save if notes have been loaded or explicitly modified to avoid overwriting with empty array on init
+    if (notes.length > 0 || localStorage.getItem('ai-notes-data') !== null) {
+        try {
+            localStorage.setItem('ai-notes-data', JSON.stringify(notes));
+        } catch (e) {
+            console.error("Failed to save notes to localStorage", e);
+        }
     }
   }, [notes]);
 
@@ -59,7 +74,7 @@ export default function AINotesPage() {
       content: `# Comece a escrever sua anotação aqui...\n\nUse **Markdown** para formatar seu texto.`,
       createdAt: Date.now(),
     };
-    setNotes(prev => [newNote, ...prev.sort((a,b) => b.createdAt - a.createdAt)]);
+    setNotes(prev => [newNote, ...prev].sort((a,b) => b.createdAt - a.createdAt));
     setSelectedNoteId(newNote.id);
     setCurrentTitle(newNote.title);
     setCurrentContent(newNote.content);
@@ -68,6 +83,7 @@ export default function AINotesPage() {
   };
 
   const handleSelectNote = (noteId: string) => {
+    if (isLoading || isSummarizing) return;
     const note = notes.find(n => n.id === noteId);
     if (note) {
       setSelectedNoteId(note.id);
@@ -95,7 +111,7 @@ export default function AINotesPage() {
   };
 
   const handleDeleteNote = (noteId: string) => {
-    if (!noteId) return;
+    if (!noteId || isLoading || isSummarizing) return;
     setIsLoading(true);
     setNotes(prev => prev.filter(n => n.id !== noteId));
     if (selectedNoteId === noteId) {
@@ -170,25 +186,46 @@ export default function AINotesPage() {
               )}
               <ul className="p-2 space-y-1">
                 {notes.map(note => (
-                  <li key={note.id}>
+                  <li key={note.id}
+                      className={cn(
+                        "w-full text-left h-auto py-2 px-3 rounded-md flex items-center transition-colors group",
+                        isLoading || isSummarizing
+                            ? "opacity-60 cursor-not-allowed"
+                            : "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                        selectedNoteId === note.id
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : isLoading || isSummarizing ? "bg-transparent text-foreground" : "hover:bg-accent hover:text-accent-foreground bg-transparent text-foreground"
+                      )}
+                      onClick={isLoading || isSummarizing ? undefined : () => handleSelectNote(note.id)}
+                      onKeyDown={isLoading || isSummarizing ? undefined : (e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              handleSelectNote(note.id);
+                          }
+                      }}
+                      role="button"
+                      tabIndex={isLoading || isSummarizing ? -1 : 0}
+                      aria-disabled={isLoading || isSummarizing}
+                      aria-current={selectedNoteId === note.id ? "page" : undefined}
+                  >
+                    <FileText className={cn("mr-2 h-4 w-4 flex-shrink-0", selectedNoteId === note.id ? "text-primary-foreground/80" : "text-muted-foreground group-hover:text-accent-foreground")} />
+                    <span className="truncate flex-grow mr-2">{note.title}</span>
                     <Button
-                      variant={selectedNoteId === note.id ? "secondary" : "ghost"}
-                      className="w-full justify-start text-left h-auto py-2"
-                      onClick={() => handleSelectNote(note.id)}
+                      variant="ghost"
+                      size="icon"
+                      className={cn(
+                        "h-6 w-6 ml-auto text-muted-foreground hover:text-destructive flex-shrink-0 p-1 opacity-50 group-hover:opacity-100 focus:opacity-100",
+                        selectedNoteId === note.id && "text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-destructive"
+                      )}
+                      onClick={(e) => { 
+                          e.stopPropagation();
+                          if (isLoading || isSummarizing) return;
+                          handleDeleteNote(note.id); 
+                      }}
                       disabled={isLoading || isSummarizing}
+                      aria-label={`Excluir anotação ${note.title}`}
                     >
-                      <FileText className="mr-2 h-4 w-4 flex-shrink-0" />
-                      <span className="truncate flex-grow">{note.title}</span>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-6 w-6 ml-auto text-muted-foreground hover:text-destructive"
-                        onClick={(e) => { e.stopPropagation(); handleDeleteNote(note.id); }}
-                        disabled={isLoading || isSummarizing}
-                        aria-label="Excluir anotação"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </li>
                 ))}
@@ -267,3 +304,4 @@ export default function AINotesPage() {
     </div>
   );
 }
+
