@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea'; // Added import
 import { clarifyConcept, type ConceptClarifierInput, type ConceptClarifierOutput } from '@/ai/flows/concept-clarifier-flow';
 import { Loader2, AlertCircle, GraduationCap, Lightbulb, ListChecks, HelpCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -147,3 +148,4 @@ export default function ConceptClarifierPage() {
     </div>
   );
 }
+
