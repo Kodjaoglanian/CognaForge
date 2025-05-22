@@ -10,7 +10,8 @@ import {
   Settings,
   Puzzle,
   Briefcase,
-  GraduationCap, // Novo ícone para Clarificador de Conceitos
+  GraduationCap,
+  BrainCircuit, // Novo ícone
 } from 'lucide-react';
 
 export interface NavItem {
@@ -33,6 +34,12 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/concept-clarifier',
     icon: GraduationCap,
     label: 'Clarificar',
+  },
+  {
+    title: 'Navegador de Vieses Cognitivos',
+    href: '/cognitive-bias-navigator',
+    icon: BrainCircuit,
+    label: 'Vieses',
   },
   {
     title: 'Batalhas Cognitivas',
@@ -79,4 +86,3 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const APP_NAME = "CognaForge";
-

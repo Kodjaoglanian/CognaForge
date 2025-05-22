@@ -168,6 +168,7 @@ export default function DashboardPage() {
           </p>
           <ul className="list-disc list-inside space-y-1 pl-4">
             <li><span className="font-semibold text-primary">Desmistificar</span> conceitos complexos com explicações claras e analogias.</li>
+            <li><span className="font-semibold text-primary">Navegar</span> e entender vieses cognitivos que afetam seu pensamento.</li>
             <li><span className="font-semibold text-primary">Debater</span> ideias e fortalecer sua argumentação em duelos com a IA.</li>
             <li><span className="font-semibold text-primary">Construir</span> mapas mentais e anotações personalizadas.</li>
             <li><span className="font-semibold text-primary">Simular</span> entrevistas para se preparar para desafios profissionais.</li>
@@ -199,8 +200,9 @@ function getFeatureDescription(href: string): string {
       return 'Simule entrevistas de emprego com uma IA que assume diferentes personas de entrevistadores e fornece feedback.';
     case '/concept-clarifier':
       return 'Desvende termos e ideias complexas com explicações simples, analogias e pontos-chave gerados pela IA.';
+    case '/cognitive-bias-navigator':
+      return 'Identifique e compreenda vieses cognitivos comuns através de cenários interativos e análises.';
     default:
       return 'Explore esta funcionalidade para aprimorar sua jornada de aprendizado.';
   }
 }
-
