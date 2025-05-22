@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter as UiCardFooter } from '@/components/ui/card';
 import { NAV_ITEMS } from '@/lib/constants';
 import Link from 'next/link';
-import { ArrowRight, Lightbulb, Puzzle, Loader2, Brain, FileText, Zap, Swords, ClipboardCopy, StickyNote } from 'lucide-react'; // Added StickyNote
+import { ArrowRight, Lightbulb, Puzzle, Loader2, Brain, FileText, Zap, Swords, ClipboardCopy, StickyNote, MessageSquarePlus } from 'lucide-react'; 
 import { generateDailyTeaser, type DailyTeaserOutput } from '@/ai/flows/daily-teaser-flow';
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownRenderer } from '@/components/shared/markdown-renderer';
@@ -168,7 +168,7 @@ export default function DashboardPage() {
             Nossas ferramentas, impulsionadas por inteligência artificial de ponta, são seus parceiros nesta jornada:
           </p>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 list-inside">
-            <li className="flex items-start"><StickyNote className="h-5 w-5 mr-2 mt-0.5 text-primary flex-shrink-0"/> <span className="font-medium text-foreground/90">Organize</span> suas ideias e <span className="font-medium text-foreground/90">resuma</span> com o Caderno IA.</li>
+            <li className="flex items-start"><StickyNote className="h-5 w-5 mr-2 mt-0.5 text-primary flex-shrink-0"/> <span className="font-medium text-foreground/90">Organize</span> suas ideias, <span className="font-medium text-foreground/90">resuma</span> e <span className="font-medium text-foreground/90">cocrie</span> com o Caderno IA e seu Assistente de Escrita.</li>
             <li className="flex items-start"><Lightbulb className="h-5 w-5 mr-2 mt-0.5 text-primary flex-shrink-0"/> <span className="font-medium text-foreground/90">Clarifique</span> o complexo e <span className="font-medium text-foreground/90">desmistifique</span> o obscuro.</li>
             <li className="flex items-start"><FileText className="h-5 w-5 mr-2 mt-0.5 text-primary flex-shrink-0"/> <span className="font-medium text-foreground/90">Analise</span> textos profundos e <span className="font-medium text-foreground/90">extraia</span> a essência.</li>
             <li className="flex items-start"><Puzzle className="h-5 w-5 mr-2 mt-0.5 text-primary flex-shrink-0"/> <span className="font-medium text-foreground/90">Construa</span> conhecimento com mapas mentais e anotações inteligentes.</li>
@@ -192,7 +192,7 @@ export default function DashboardPage() {
 function getFeatureDescription(href: string): string {
   switch (href) {
     case '/ai-notes':
-      return 'Crie e organize anotações com formatação Markdown. Use a IA para gerar resumos inteligentes do seu conteúdo.';
+      return 'Crie e organize anotações com Markdown. Use a IA para resumos e assistência de escrita inteligente.';
     case '/ai-flashcard-generator':
       return 'Crie flashcards personalizados instantaneamente com IA para qualquer tópico de estudo, facilitando a memorização.';
     case '/cognitive-battle':
@@ -217,3 +217,6 @@ function getFeatureDescription(href: string): string {
       return 'Explore esta funcionalidade para aprimorar sua jornada de aprendizado e pensamento crítico.';
   }
 }
+
+
+    
