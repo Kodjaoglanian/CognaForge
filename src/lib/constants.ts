@@ -14,7 +14,8 @@ import {
   BrainCircuit,
   ClipboardCopy,
   FileText,
-  StickyNote, // Ícone para Caderno IA
+  StickyNote,
+  CalendarDays, // Adicionado CalendarDays
 } from 'lucide-react';
 
 export interface NavItem {
@@ -61,6 +62,12 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/text-analyzer',
     icon: FileText,
     label: 'Analisar Texto',
+  },
+  {
+    title: 'Calendário IA', // Adicionado item do Calendário
+    href: '/calendar',
+    icon: CalendarDays,
+    label: 'Calendário',
   },
   {
     title: 'Batalhas Cognitivas',
